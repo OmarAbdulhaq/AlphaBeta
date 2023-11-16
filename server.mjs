@@ -22,11 +22,9 @@ app.post('/start', (req, res) => {
     }
 });
 app.post('/move', (req, res) => {
-    
     try {
-
-        const { state: currentPiles, move } = req.body;
-        console.log('current piles in ,move',currentPiles);
+        const { state: currentPiles, move, difficulty } = req.body;
+        console.log('Received move:', move, 'Current piles:', currentPiles, 'Difficulty:', difficulty);
 
         // Validate the structure of the request
         if (!Array.isArray(currentPiles) || typeof move !== 'object' || !('pileIndex' in move) || !('stones' in move)) {
@@ -55,8 +53,17 @@ app.post('/move', (req, res) => {
             return res.json({ state: currentPiles, message: 'Game over! You have won!' });
         }
 
+        // Set depth based on difficulty
+        let depth = 3; // Default to 'medium'
+        if (difficulty === 'easy') {
+            depth = 1;
+        } else if (difficulty === 'medium') {
+            depth = 3;
+        }else if (difficulty === 'hard') {
+            depth = 5;
+        }
+
         // AI's move
-        const depth = 3; // AI difficulty level
         const aiMoveState = findOptimalMove(currentPiles, depth);
 
         // Check if the game is over after AI's move
@@ -69,7 +76,6 @@ app.post('/move', (req, res) => {
         console.error('Error in /move endpoint:', error);
         return res.status(500).json({ error: error.message || 'Internal server error' });
     }
-    
 });
 
 

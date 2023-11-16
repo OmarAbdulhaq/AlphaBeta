@@ -38,6 +38,7 @@ function alphaBeta(node, depth, alpha, beta, maximizingPlayer) {
             }
         }
         return value;
+        
     } else {
         let value = Infinity;
         for (let childNode of generateChildNodes(node)) {

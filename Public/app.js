@@ -43,16 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         return response.json();
     };
-    
+
     moveForm.addEventListener('submit', async (event) => {
         event.preventDefault();
+        const difficulty = sessionStorage.getItem('difficulty') || 'medium';
         let pileIndex = parseInt(document.getElementById('pileIndex').value, 10) - 1;
         let stones = parseInt(document.getElementById('stones').value, 10);
     
         const isValidMove = pileIndex >= 0 && pileIndex < currentState.length && stones > 0 && stones <= currentState[pileIndex];
     
         if (isValidMove) {
-            const data = await postData('/move', { state: currentState, move: { pileIndex, stones } });
+            const data = await postData('/move', { state: currentState, move: { pileIndex, stones }, difficulty });
     
             if (data.state) {
                 updateGameState(data.state);
